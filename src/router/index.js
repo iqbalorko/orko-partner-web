@@ -5,7 +5,28 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home,
+    component: () => import(/* webpackChunkName: "about" */ '../views/auth/Login.vue'),
+  },
+  {
+    path: '/dashboard',
+    component: () => import('../views/layouts/Layouts'),
+    meta: true,
+    children: [
+      {
+        path: '/dashboard',
+        name: 'dashboard',
+        component: import('../views/dashboard/Dashboard'),
+        meta: {
+          auth: true,
+          breadCrumb: 'Dashboard',
+        },
+      },
+    ],
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import(/* webpackChunkName: "about" */ '../views/auth/Login.vue'),
   },
   {
     path: '/about',
