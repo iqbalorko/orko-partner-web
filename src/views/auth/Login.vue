@@ -1,10 +1,13 @@
 <template>
   <div>
-    <div class="login">
+    <div class="login" v-loading="loading">
       <div>
         <el-row :gutter="10" justify="center">
-          <el-col :xs="24" :sm="12" :md="6" :lg="6" :xl="6">
+          <el-col :xs="24" :sm="12" :md="10" :lg="8" :xl="6">
+            <el-alert :title="error_msg" type="error" v-if="error_msg"/>
+            <br>
             <el-card class="box-card">
+
               <div class="text-center mb-5">
                 <img src="../../assets/logo.png" alt="Orko" class="logo">
               </div>
@@ -40,6 +43,7 @@
 
 <script>
 import {mapActions} from 'vuex';
+
 export default {
   name: 'Login',
   data() {
@@ -50,15 +54,27 @@ export default {
         user_type: 'agent',
         password_required: 1
       },
+      loading: false,
+      error_msg: '',
+      is_error_msg: false,
     };
   },
   methods: {
     ...mapActions('auth', ['login']),
     submitForm() {
-
+      this.loading = true;
       if (this.form) {
-        console.log('called')
-        this.login(this.form);
+        this.login(this.form).then(res => {
+          if (res.data.status_code == 400) {
+            this.loading = false
+            return this.error_msg = res.data.message;
+          }
+          localStorage.setItem('api_token', res.data.user.api_token)
+          this.loading = false;
+          this.$router.push('/dashboard')
+        }).catch(err => {
+          console.log('err', err)
+        });
       }
     },
 

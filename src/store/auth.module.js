@@ -1,32 +1,40 @@
-import {userService} from '../_services/user.service';
+import axios from 'axios';
+
+const user = JSON.parse(localStorage.getItem('user'));
 const auth = {
     namespaced: true,
-    state: {},
+    state: {
+        user: JSON.parse(localStorage.getItem('user')),
+        loggedIn: false,
+
+    },
     actions: {
         login({dispatch, commit}, form) {
-            // commit('loginRequest', {userid});
-            userService.login(form)
-                .then(user => {
-                        console.log('userss', user)
-                        if (user.data.Status == "failed") {
-                            return true;
-                        } else {
-                            commit('loginSuccess', user.data);
-                            // var prev_url = localStorage.getItem('prev_url');
-                            // return router.push('/dashboard')
-                        }
-                    },
-                    error => {
-                        console.log('errorss',error)
-                        // this.$router.push('login');
-                        commit('loginFailure', error);
-                        dispatch('alert/error', error, {root: true});
-                    }
-                );
+            commit('loginRequest', form.userid);
+            let formD = new FormData();
+            formD.append('userid', form.userid);
+            formD.append('password', form.password);
+            formD.append('user_type', form.user_type);
+            var url = `${process.env.VUE_APP_API_URL}/api/v1/login?password_required=1`;
+            return axios.post(url, formD)
+                .then((res) => {
+                    commit('loginSuccess', res.data.user);
+                    return res;
+                }).catch((err) => {
+                    return err;
+                });
         },
         logout({commit}) {
-            userService.logout();
-            commit('logout');
+            var url = '/api/v1/user/logout';
+            return axios.post(url)
+                .then(res => {
+                    localStorage.removeItem('api_token');
+                    commit('logout');
+                    return res;
+                }).catch((err) => {
+                    return err
+                })
+
         },
     },
     mutations: {
@@ -35,7 +43,7 @@ const auth = {
             state.user = user;
         },
         loginSuccess(state, user) {
-            state.status = {loggedIn: true};
+            state.loggedIn = true;
             state.user = user;
         },
         loginFailure(state) {
@@ -44,6 +52,7 @@ const auth = {
         },
         logout(state) {
             state.status = {};
+            state.loggedIn = false;
             state.user = null;
         },
     },

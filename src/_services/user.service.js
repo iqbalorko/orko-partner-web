@@ -15,10 +15,11 @@ function login(form) {
   formD.append('user_type', form.user_type);
   var url = `${process.env.VUE_APP_API_URL}/api/v1/login?password_required=1`;
   console.log('url', url)
-
    return axios.post(url,formD)
     .then((user) => {
-      console.log('called',user)
+        if(user.data.status_code == 400){
+            return user.data
+        }
       // Vue.prototype.$snotify.clear();
       // if (user.data.Status == 'failed') {
       //   // Vue.prototype.$snotify.error('Failed');
@@ -32,6 +33,7 @@ function login(form) {
       // login successful if there's a jwt token in the response
     }).catch((err) => {
         console.log('use', err)
+         return "<el-alert title='error alert' type='error' show-icon />"
       // Vue.prototype.$snotify.error('Invalid Credentials', err);
       // this.$emit.handleError();
     });

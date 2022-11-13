@@ -1,12 +1,17 @@
 import { createApp } from 'vue';
 import ElementPlus from 'element-plus';
+const axios = require('axios');
 import App from './App.vue';
 import router from './router';
 import store from './store';
-import axios from 'axios';
 import './axiosinstance';
+import './assets/style.css';
 import 'element-plus/dist/index.css';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+
+
+// axios.defaults.withCredentials = true;
+
 
 
 const app = createApp(App);

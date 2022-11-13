@@ -36,6 +36,15 @@
         <el-icon>
           <setting/>
         </el-icon>
+        <template #title>
+          <router-link class="el-link" to="/patients">Patients</router-link>
+        </template>
+      </el-menu-item>
+
+      <el-menu-item index="4">
+        <el-icon>
+          <setting/>
+        </el-icon>
         <template #title>Notification</template>
       </el-menu-item>
 
@@ -89,5 +98,8 @@ export default {
 .sidebar-logo {
   height: 50px;
   text-align: center;
+}
+.sidebar-padding {
+
 }
 </style>

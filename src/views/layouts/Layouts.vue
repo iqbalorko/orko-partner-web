@@ -1,17 +1,19 @@
 <template>
   <div>
     <div class="d-flex">
-      <div>
+      <div class="sidebar-padding">
         <Sidebar/>
       </div>
       <div class="w-100">
         <div class="header">
           <Header/>
         </div>
-        <router-view/>
-<!--        <div>-->
-<!--          <Footer />-->
-<!--        </div>-->
+        <div class="main-content">
+          <router-view/>
+        </div>
+        <!--        <div>-->
+        <!--          <Footer />-->
+        <!--        </div>-->
       </div>
     </div>
   </div>
@@ -33,5 +35,7 @@ export default {
 </script>
 
 <style scoped>
-
+.main-content {
+  padding: 30px 30px;
+}
 </style>
